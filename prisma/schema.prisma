@@ -1,0 +1,95 @@
+@'
+enum PublicationType {
+  LOOKING_FOR_PLAYERS
+  LOOKING_FOR_RIVAL
+}
+
+enum MatchType {
+  FUTBOL_5
+  FUTBOL_7
+  FUTBOL_8
+  FUTBOL_11
+}
+
+enum PublicationStatus {
+  OPEN
+  FULL
+  CANCELLED
+  COMPLETED
+}
+
+enum ApplicationStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+model Profile {
+  id           String   @id
+  alias        String   @unique
+  avatarUrl    String?  @map("avatar_url")
+  phone        String?
+  position     String?
+  zone         String?
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @default(now()) @map("updated_at") temporal.updatedAt()
+
+  publications Publication[] @relation("UserPublications")
+  applications Application[] @relation("UserApplications")
+  messages     Message[]
+
+  @@map("profiles")
+}
+
+model Publication {
+  id           String            @id @default(uuid())
+  creatorId    String            @map("creator_id")
+  title        String
+  description  String?
+  type         PublicationType
+  matchType    MatchType         @map("match_type")
+  matchDate    DateTime          @map("match_date")
+  locationName String            @map("location_name")
+  locationLat  Float?            @map("location_lat")
+  locationLng  Float?            @map("location_lng")
+  missingSlots Int               @default(1) @map("missing_slots")
+  allowsSubs   Boolean           @default(false) @map("allows_subs")
+  status       PublicationStatus @default(OPEN)
+  createdAt    DateTime          @default(now()) @map("created_at")
+  updatedAt    DateTime          @default(now()) @map("updated_at") temporal.updatedAt()
+
+  creator      Profile           @relation("UserPublications", fields: [creatorId], references: [id], onDelete: Cascade)
+  applications Application[]
+  messages     Message[]
+
+  @@map("publications")
+}
+
+model Application {
+  id            String            @id @default(uuid())
+  publicationId String            @map("publication_id")
+  applicantId   String            @map("applicant_id")
+  message       String?
+  status        ApplicationStatus @default(PENDING)
+  createdAt     DateTime          @default(now()) @map("created_at")
+  updatedAt     DateTime          @default(now()) @map("updated_at") temporal.updatedAt()
+
+  publication   Publication       @relation(fields: [publicationId], references: [id], onDelete: Cascade)
+  applicant     Profile           @relation("UserApplications", fields: [applicantId], references: [id], onDelete: Cascade)
+
+  @@unique([publicationId, applicantId])
+  @@map("applications")
+}
+
+model Message {
+  id            String      @id @default(uuid())
+  publicationId String      @map("publication_id")
+  senderId      String      @map("sender_id")
+  content       String
+  createdAt     DateTime    @default(now()) @map("created_at")
+
+  publication   Publication @relation(fields: [publicationId], references: [id], onDelete: Cascade)
+  sender        Profile     @relation(fields: [senderId], references: [id], onDelete: Cascade)
+
+  @@map("messages")
+}
