@@ -1,23 +1,14 @@
 import type { Metadata } from "next";
-import { DM_Serif_Display, Geist, Geist_Mono } from "next/font/google";
+import { DM_Serif_Display } from "next/font/google";
 import localFont from "next/font/local";
 import { Toaster } from "sonner";
 import "./globals.css";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 const serifDisplay = DM_Serif_Display({
   weight: "400",
   variable: "--font-serif-display",
   subsets: ["latin"],
+  display: "swap",
 });
 
 const messiFont = localFont({
@@ -40,9 +31,9 @@ export default function RootLayout({
   return (
     <html
       lang="es"
-      className={`${geistSans.variable} ${geistMono.variable} ${serifDisplay.variable} ${messiFont.variable} dark h-full antialiased`}
+      className={`${serifDisplay.variable} ${messiFont.variable} dark h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-background text-foreground">
+      <body>
         {children}
         <Toaster richColors position="top-right" />
       </body>
