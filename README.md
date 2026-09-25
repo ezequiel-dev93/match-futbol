@@ -18,24 +18,92 @@ Los partidos se organizan históricamente en grupos caóticos de WhatsApp o rede
     *   *Públicos siempre:* Alias, foto, posición, zona de juego.
     *   *Privados hasta aceptación:* Teléfono y datos de contacto directo.
 *   **Chat en Tiempo Real:** Canal habilitado automáticamente entre los participantes confirmados de un partido.
-*   **Geolocalización:** Filtrado de partidos y rivales por cercanía geográfica (PostGIS).
+*   **Experiencia Inmersiva:** Animaciones fluidas con **GSAP** e interacciones 3D con **Three.js**.
 
 ---
 
-## 📐 Arquitectura del Proyecto
+## 🏛️ Arquitectura del Proyecto
 
-El proyecto está diseñado bajo estándares de alta calidad técnica para garantizar mantenibilidad, testabilidad y escalabilidad:
-
-### 1. Screaming Architecture (Estructura de Directorios)
-La estructura de carpetas expresa directamente el dominio del negocio (fútbol y partidos), no las herramientas técnicas:
+El proyecto implementa una combinación de **Screaming Architecture**, **Arquitectura Hexagonal (Ports & Adapters)**, **Programación Orientada a Objetos (POO)** y principios **SOLID**:
 
 ```text
 src/
-├── modules/
-│   ├── matches/          # Publicaciones, búsquedas de jugadores/rivales
-│   ├── applications/     # Solicitudes de unión a partidos
-│   ├── profiles/         # Gestión de usuarios, perfiles y privacidad
-│   ├── chat/             # Mensajería y salas en tiempo real
-│   └── notifications/    # Sistema de avisos (push, in-app)
-├── shared/               # Componentes UI (shadcn), clientes y utilidades comunes
-└── app/                  # Next.js App Router (Rutas, layouts y Server Actions)
+├── core/                         # 🧠 LÓGICA DE NEGOCIO (Hexagonal + POO + SOLID)
+│   ├── shared/domain/            # Clases madre: Entity, ValueObject, DomainError
+│   ├── profiles/                 # Dominio, Casos de Uso y Adaptadores de Perfiles
+│   ├── matches/                  # Dominio, Casos de Uso y Adaptadores de Partidos
+│   ├── applications/             # Dominio, Casos de Uso y Adaptadores de Solicitudes
+│   └── chat/                     # Dominio, Casos de Uso y Adaptadores de Mensajería
+│
+├── features/                     # 🗣️ SCREAMING ARCHITECTURE (UI y Flujo de Producto)
+│   ├── matches/                  # components/, data/, types/, animations/
+│   ├── applications/             # components/, data/, types/, animations/
+│   ├── profiles/                 # components/, data/, types/, animations/
+│   └── chat/                     # components/, data/, types/, animations/
+│
+├── shared/                       # 🧱 TRANSVERSAL Y DESIGN SYSTEM
+│   ├── components/               # Componentes UI reutilizables (shadcn/ui)
+│   ├── lib/                      # Clientes (gsap.ts, three.ts, supabase.ts, utils.ts)
+│   ├── hooks/                    # Hooks globales
+│   ├── types/                    # Tipos globales
+│   └── animations/               # Presets GSAP y escenas Three.js reutilizables
+│
+├── prisma/                       # 🗄️ CONTRATO DE BASE DE DATOS (Prisma 8)
+│   ├── contract.prisma
+│   ├── contract.json
+│   ├── contract.d.ts
+│   └── db.ts
+│
+└── app/                          # 🌐 NEXT.JS APP ROUTER (Rutas y Layouts)
+```
+
+---
+
+## 🛠️ Stack Tecnológico
+
+*   **Framework Fullstack:** Next.js 16 (App Router, Server Components, Server Actions).
+*   **Estilos y UI:** Tailwind CSS v4 + [shadcn/ui](https://ui.shadcn.com/).
+*   **Animaciones y 3D:** [GSAP](https://gsap.com/) (`@gsap/react`) + [Three.js](https://threejs.org/).
+*   **Notificaciones In-App:** [Sonner](https://sonner.emilkowal.ski/).
+*   **Estado & Caché:** Zustand + TanStack React Query.
+*   **Base de Datos, Auth & Realtime:** [Supabase](https://supabase.com/) (PostgreSQL).
+*   **ORM Contract-First:** [Prisma 8](https://www.prisma.io/) (`@prisma/orm-postgres`).
+
+---
+
+## 💻 Comandos Útiles
+
+```bash
+# Levantar servidor de desarrollo
+pnpm dev
+
+# Emitir contrato de Prisma 8 tras editar src/prisma/contract.prisma
+pnpm prisma contract emit
+
+# Sincronizar cambios del contrato con la base de datos en Supabase
+pnpm prisma db update
+```
+
+---
+
+## 🗺️ Roadmap
+
+### Fase 1: MVP (En progreso)
+- [x] Configuración base (Next.js + Tailwind v4 + Supabase + Prisma 8).
+- [x] Contrato de datos y tablas en PostgreSQL (`profiles`, `publications`, `applications`, `messages`).
+- [x] Arquitectura base (`core/`, `features/`, `shared/`).
+- [x] Módulo `profiles` (Entidades POO, Value Objects y privacidad).
+- [x] Módulo `matches` (Publicación y búsqueda de partidos 5v5, 7v7, 8v8, 11v11).
+- [x] Módulo `applications` (Flujo de solicitud y aceptación).
+- [x] Módulo `chat` (Reglas de acceso post-aceptación y mensajería del partido).
+- [ ] Interfaz de usuario e integración visual (`features/` con GSAP y Three.js).
+
+### Fase 2: Crecimiento & Expansión
+- [ ] PWA instalable con notificaciones Push.
+- [ ] Sistema de reputación de jugadores y penalización por ausencias.
+- [ ] Integración de mapas interactivos y geolocalización avanzada.
+
+### Fase 3: Microservicio de Inteligencia Artificial (Futuro) 🤖
+- Matchmaking inteligente por nivel, zona e historial.
+- Balanceo automático de equipos.
+- Predicción preventiva de ausencias.

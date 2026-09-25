@@ -1,0 +1,19 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "react", "nextjs", "unicorn"],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "warn"
+  },
+  "rules": {
+    "react/react-in-jsx-scope": "off",
+    "typescript/no-extraneous-class": "off"
+  },
+  "ignorePatterns": [
+    "node_modules",
+    ".next",
+    ".agents",
+    "migrations",
+    "src/prisma/contract.d.ts"
+  ]
+}

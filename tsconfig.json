@@ -19,7 +19,11 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/core/*": ["./src/core/*"],
+      "@/features/*": ["./src/features/*"],
+      "@/shared/*": ["./src/shared/*"],
+      "@/prisma/*": ["./src/prisma/*"],
+      "@/*": ["./*", "./src/*"]
     },
     "types": [
       "node"

@@ -7,12 +7,15 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint",
+    "lint": "oxlint src app",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "postinstall": "prisma skills sync || exit 0",
     "contract:emit": "prisma contract emit"
   },
   "dependencies": {
     "@base-ui/react": "^1.8.0",
+    "@gsap/react": "^2.1.2",
     "@prisma/client": "^7.10.0",
     "@prisma/orm-postgres": "8.0.0-rc.12",
     "@supabase/ssr": "^0.12.7",
@@ -39,11 +42,12 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "16.3.6",
+    "@types/three": "^0.186.0",
+    "oxlint": "^1.85.0",
     "prisma": "8.0.0-rc.17",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^5.0.1"
   },
   "packageManager": "pnpm@9.12.2"
 }
